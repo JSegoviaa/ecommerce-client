@@ -1,5 +1,5 @@
 import useSWR from 'swr';
-import { credentials } from '../credentials';
+import { API } from '../env';
 import { Sort } from '../interfaces';
 import { ProductsResp } from '../interfaces/products';
 
@@ -12,7 +12,7 @@ interface Config {
 export const useProducts = (config: Config) => {
   const { sort, slug, order } = config;
   const { data, error } = useSWR<ProductsResp>(
-    `${credentials.api}/products/${slug}/subcategory?sort=${sort}&order_by=${order}`
+    `${API}/products/${slug}/subcategory?sort=${sort}&order_by=${order}`
   );
 
   return {

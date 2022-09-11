@@ -1,5 +1,6 @@
-import useSWR, { SWRConfiguration, BareFetcher } from 'swr';
-import { credentials } from '../credentials';
+import useSWR from 'swr';
+import { API } from '../env';
+
 import { Data } from '../interfaces';
 
 export const useCategories = <T>(config: Data) => {
@@ -7,7 +8,7 @@ export const useCategories = <T>(config: Data) => {
     config;
 
   const { data, error } = useSWR<T>(
-    `${credentials.api}/${endpoint}?sort=${sort}&order_by=${order}&is_published=${is_published}&from=${from}&is_active=${is_active}&limit=${limit}`
+    `${API}/${endpoint}?sort=${sort}&order_by=${order}&is_published=${is_published}&from=${from}&is_active=${is_active}&limit=${limit}`
   );
 
   return {
@@ -18,7 +19,7 @@ export const useCategories = <T>(config: Data) => {
 };
 
 export const useCategory = <T>(id: number) => {
-  const { data, error } = useSWR<T>(`${credentials.api}/categories/${id}`);
+  const { data, error } = useSWR<T>(`${API}/categories/${id}`);
 
   return {
     data,
@@ -28,7 +29,7 @@ export const useCategory = <T>(id: number) => {
 };
 
 export const useSubcategory = <T>(id: number) => {
-  const { data, error } = useSWR<T>(`${credentials.api}/subcategories/${id}`);
+  const { data, error } = useSWR<T>(`${API}/subcategories/${id}`);
 
   return {
     data,
