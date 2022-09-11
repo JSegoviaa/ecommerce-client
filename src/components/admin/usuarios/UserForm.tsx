@@ -19,7 +19,7 @@ interface Props {
 
 const UserForm: FC<Props> = ({ user }) => {
   const { updateUser } = useContext(AdminContext);
-  const [roleId, setRoleId] = useState('0');
+  const [roleId, setRoleId] = useState(String(user?.role_id));
   const [loadingRoles, setLoadingRoles] = useState(false);
   const [roles, setRoles] = useState<Roles[]>([]);
 
