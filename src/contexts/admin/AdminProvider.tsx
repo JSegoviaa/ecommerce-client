@@ -8,6 +8,7 @@ import {
   CountUsers,
   CreateCategory,
   CreateSubcategory,
+  GetUser,
   NewSubcategory,
   UpdateSubcatResp,
   UploadedPictureResp,
@@ -286,6 +287,14 @@ export const AdminProvider: FC<Props> = ({ children }) => {
     }
   };
 
+  const updateUser = async (user: GetUser) => {
+    const { data } = await api.put(`/users/${user.id}`, user, {
+      withCredentials: true,
+    });
+
+    return data;
+  };
+
   return (
     <AdminContext.Provider
       value={{
@@ -298,6 +307,7 @@ export const AdminProvider: FC<Props> = ({ children }) => {
         updateSubcategory,
         countUsersRole,
         getUsers,
+        updateUser,
       }}
     >
       {children}

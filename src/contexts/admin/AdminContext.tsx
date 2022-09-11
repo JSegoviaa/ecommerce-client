@@ -6,6 +6,7 @@ import {
   CategoryUpdatedResp,
   CreateCategory,
   CreateSubcategory,
+  GetUser,
   NewSubcategory,
   UpdateSubcatResp,
   UploadedPictureResp,
@@ -34,6 +35,7 @@ interface ContextProps {
   updateSubcategory: (subcategory: NewSubcategory) => Promise<UpdateSubcatResp>;
   countUsersRole: () => Promise<void>;
   getUsers: (query: UserQuery) => Promise<void>;
+  updateUser: (user: GetUser) => Promise<void>;
 }
 
 export const AdminContext = createContext({} as ContextProps);
