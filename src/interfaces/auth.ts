@@ -12,6 +12,7 @@ export interface LoginResponse {
   msg?: string;
   user?: User;
   errors?: Errors[];
+  token?: string;
 }
 
 export interface User {

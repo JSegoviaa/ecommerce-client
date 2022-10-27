@@ -58,6 +58,8 @@ export const AuthProvider: FC<Props> = ({ children }) => {
         withCredentials: true,
       });
 
+      Cookies.set('token', res.data.token!);
+
       dispatch({ type: 'Auth - Login', payload: res.data.user });
 
       return res.data;
