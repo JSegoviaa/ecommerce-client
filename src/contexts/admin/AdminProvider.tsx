@@ -155,7 +155,7 @@ export const AdminProvider: FC<Props> = ({ children }) => {
       const { data } = await api.put<CategoryUpdatedResp>(
         `/categories/${category.id}`,
         category,
-        { withCredentials: true, headers: { 'x-token': token } }
+        { withCredentials: true }
       );
 
       return data;

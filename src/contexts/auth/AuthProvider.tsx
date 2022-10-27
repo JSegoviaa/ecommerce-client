@@ -44,7 +44,6 @@ export const AuthProvider: FC<Props> = ({ children }) => {
     try {
       const res = await api.get<LoginResponse>('/auth/renew-token', {
         withCredentials: true,
-        headers: { 'x-token': token },
       });
 
       dispatch({ type: 'Auth - Login', payload: res.data.user });
