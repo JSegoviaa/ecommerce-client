@@ -28,6 +28,8 @@ const Auth_INITIAL_STATE: AuthState = {
   user: undefined,
 };
 
+const token = Cookies.get('token') || '';
+
 export const AuthProvider: FC<Props> = ({ children }) => {
   const [state, dispatch] = useReducer(authReducer, Auth_INITIAL_STATE);
   const router = useRouter();
@@ -42,6 +44,7 @@ export const AuthProvider: FC<Props> = ({ children }) => {
     try {
       const res = await api.get<LoginResponse>('/auth/renew-token', {
         withCredentials: true,
+        headers: { 'x-token': token },
       });
 
       dispatch({ type: 'Auth - Login', payload: res.data.user });
@@ -63,8 +66,6 @@ export const AuthProvider: FC<Props> = ({ children }) => {
       });
 
       dispatch({ type: 'Auth - Login', payload: res.data.user });
-
-      console.log(res.data);
 
       Cookies.set('token', res.data.token!);
 
