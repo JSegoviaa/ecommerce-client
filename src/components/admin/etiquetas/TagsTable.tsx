@@ -17,6 +17,7 @@ import {
   TablePagination,
   TableRow,
 } from '@mui/material';
+import { formatedDate } from '../../../helpers';
 import { AdminContext } from '../../../contexts';
 
 interface Props {
@@ -73,7 +74,7 @@ const TagsTable: FC<Props> = (props) => {
                 </TableCell>
 
                 <TableCell align="center" component="th" scope="row">
-                  {tag.created_at}
+                  {formatedDate(tag.created_at)}
                 </TableCell>
 
                 <TableCell align="center" component="th" scope="row">

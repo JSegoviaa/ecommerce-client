@@ -5,6 +5,7 @@ export interface RegisterResponse {
   msg?: string;
   newUser?: User;
   errors?: Errors[];
+  token?: string;
 }
 
 export interface LoginResponse {

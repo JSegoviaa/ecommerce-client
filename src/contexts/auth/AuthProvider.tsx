@@ -44,6 +44,8 @@ export const AuthProvider: FC<Props> = ({ children }) => {
         withCredentials: true,
       });
 
+      Cookies.set('token', res.data.token!);
+
       dispatch({ type: 'Auth - Login', payload: res.data.user });
     } catch (error) {
       Cookies.remove('token');
@@ -58,9 +60,9 @@ export const AuthProvider: FC<Props> = ({ children }) => {
         withCredentials: true,
       });
 
-      Cookies.set('token', res.data.token!);
-
       dispatch({ type: 'Auth - Login', payload: res.data.user });
+
+      Cookies.set('token', res.data.token!);
 
       return res.data;
     } catch (error) {
@@ -85,6 +87,8 @@ export const AuthProvider: FC<Props> = ({ children }) => {
       const res = await api.post<RegisterResponse>('/users', data, {
         withCredentials: true,
       });
+
+      Cookies.set('token', res.data.token!);
 
       dispatch({ type: 'Auth - Login', payload: res.data.newUser });
 

@@ -21,6 +21,7 @@ import {
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import { AdminContext } from '../../../contexts';
+import { formatedDate } from '../../../helpers';
 import { UserQuery, OrderByUser, Sort } from '../../../interfaces';
 import { Empty, Loading } from '../../ui';
 
@@ -120,7 +121,7 @@ const UserTable: FC<Props> = ({ order, sort, active }) => {
                           {user.role}
                         </TableCell>
                         <TableCell align="center" component="th" scope="row">
-                          {user.created_at}
+                          {formatedDate(user.created_at)}
                         </TableCell>
                         <TableCell align="center" component="th" scope="row">
                           <IconButton onClick={() => goToEdit(user.id)}>

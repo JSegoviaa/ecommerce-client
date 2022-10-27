@@ -1,7 +1,6 @@
-// import moment from 'moment';
+import dayjs from 'dayjs';
+import 'dayjs/locale/es-mx';
 
 export const formatedDate = (date: string) => {
-  // const createdAt = moment(date);
-  return date;
-  // return createdAt.format('D MMMM YYYY, h:mm a');
+  return dayjs(date).locale('es-mx').format('D MMMM YYYY, h:mm a');
 };

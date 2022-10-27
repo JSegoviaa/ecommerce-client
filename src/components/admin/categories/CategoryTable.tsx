@@ -22,7 +22,7 @@ import {
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 
-import { isValidRole } from '../../../helpers';
+import { formatedDate, isValidRole } from '../../../helpers';
 import { CategoriesResp } from '../../../interfaces';
 import { AuthContext } from '../../../contexts';
 
@@ -96,10 +96,10 @@ const CategoryTable: FC<Props> = (props) => {
                 {category.title}
               </TableCell>
               <TableCell align="center" component="th" scope="row">
-                {category.created_at}
+                {formatedDate(category.created_at)}
               </TableCell>
               <TableCell align="center" component="th" scope="row">
-                {category.updated_at}
+                {formatedDate(category.updated_at)}
               </TableCell>
 
               {isValidRole(user?.role_id) ? (
