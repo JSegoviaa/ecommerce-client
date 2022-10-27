@@ -22,7 +22,7 @@ import {
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 
-import { formatedDate, isValidRole } from '../../../helpers';
+import { isValidRole } from '../../../helpers';
 import { SubcategoriesResp } from '../../../interfaces';
 import { AuthContext } from '../../../contexts';
 
@@ -101,10 +101,10 @@ const SubcategoryTable: FC<Props> = (props) => {
                 {subcategory.category_name}
               </TableCell>
               <TableCell align="center" component="th" scope="row">
-                {formatedDate(subcategory.created_at)}
+                {subcategory.created_at}
               </TableCell>
               <TableCell align="center" component="th" scope="row">
-                {formatedDate(subcategory.updated_at)}
+                {subcategory.updated_at}
               </TableCell>
 
               {isValidRole(user?.role_id) ? (
