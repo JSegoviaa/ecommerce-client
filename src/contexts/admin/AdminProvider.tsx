@@ -2,29 +2,55 @@ import { FC, useReducer } from 'react';
 import axios, { AxiosError } from 'axios';
 import { api } from '../../api';
 import {
+  Address,
+  AddressQuery,
+  AddVariantColorResp,
+  AddVariantSizeResp,
   Category,
   CategoryCreatedResp,
   CategoryUpdatedResp,
   CountUsers,
   CreateCategory,
   CreateSubcategory,
+  CreateTag,
+  CreateTagsResp,
+  GetAllAdressesResp,
+  GetTagsResp,
   GetUser,
+  GetVariantColorsResp,
+  GetVariantSizesResp,
   NewSubcategory,
+  TagCreated,
+  TagQuery,
   UpdateSubcatResp,
   UploadedPictureResp,
   UserList,
   UserQuery,
   UserTable,
   UserType,
+  Variant,
+  VariantColor,
+  VariantColorQuery,
+  VariantsColor,
+  VariantSize,
+  VariantSizeQuery,
 } from '../../interfaces';
 import { AdminContext, adminReducer } from './';
 
 export interface AdminState {
-  isLoading: boolean;
   chartLoading: boolean;
-  usersType: UserType[];
-  users: UserTable[];
-  totalUsers: number;
+  users: {
+    isLoading: boolean;
+    usersType: UserType[];
+    userList: UserTable[];
+    totalUsers: number;
+  };
+  tags: { tagList: TagCreated[]; isLoading: boolean; total: number };
+  addresses: { addressList: Address[]; isLoading: boolean; total: number };
+  variants: {
+    sizes: { sizesList: Variant[]; isLoading: boolean; total: number };
+    colors: { isLoading: boolean; colorsList: VariantsColor[]; total: number };
+  };
 }
 
 interface Props {
@@ -32,11 +58,19 @@ interface Props {
 }
 
 const Admin_INITIAL_STATE: AdminState = {
-  isLoading: false,
   chartLoading: false,
-  usersType: [],
-  users: [],
-  totalUsers: 0,
+  users: {
+    isLoading: false,
+    usersType: [],
+    userList: [],
+    totalUsers: 0,
+  },
+  tags: { tagList: [], isLoading: true, total: 0 },
+  addresses: { addressList: [], isLoading: true, total: 0 },
+  variants: {
+    sizes: { isLoading: true, sizesList: [], total: 0 },
+    colors: { isLoading: true, colorsList: [], total: 0 },
+  },
 };
 
 export const AdminProvider: FC<Props> = ({ children }) => {
@@ -243,19 +277,143 @@ export const AdminProvider: FC<Props> = ({ children }) => {
     }
   };
 
-  const addTags = async () => {};
-  const deleteTags = async () => {};
-  const updateTags = async () => {};
+  const addTags = async (tag: CreateTag): Promise<CreateTagsResp> => {
+    try {
+      const { data } = await api.post<CreateTagsResp>('/tags', tag, {
+        withCredentials: true,
+      });
 
-  const addVariant = async () => {};
-  const deleteVaraint = async () => {};
-  const updateVaraint = async () => {};
+      return data;
+    } catch (error) {
+      console.log({ error });
+      if (axios.isAxiosError(error)) {
+        const err = error as AxiosError<CreateTagsResp>;
+
+        return err.response?.data!;
+      } else {
+        return { msg: '', ok: false };
+      }
+    }
+  };
+
+  const getAllTags = async (query: TagQuery) => {
+    const { sort, order, limit, from } = query;
+
+    try {
+      dispatch({ type: 'Admin - Tags - isLoading' });
+
+      const { data } = await api.get<GetTagsResp>(
+        `/tags?limit=${limit}&sort=${sort}&from=${from}&order_by=${order}`,
+        { withCredentials: true }
+      );
+
+      dispatch({ type: 'Admin - Get All Tags', payload: data });
+
+      dispatch({ type: 'Admin - Tags - isLoading Finish' });
+    } catch (error) {
+      console.log({ error });
+
+      dispatch({ type: 'Admin - Tags - isLoading Finish' });
+    }
+  };
+
+  const addVariantColor = async (
+    variant: VariantColor
+  ): Promise<AddVariantColorResp> => {
+    try {
+      const { data } = await api.post<AddVariantColorResp>(
+        'variants/colors',
+        variant,
+        { withCredentials: true }
+      );
+
+      return data;
+    } catch (error) {
+      console.log({ error });
+      if (axios.isAxiosError(error)) {
+        const err = error as AxiosError<AddVariantColorResp>;
+
+        return err.response?.data!;
+      } else {
+        return {
+          msg: '',
+          newColor: { id: 0, name: '', color: '' },
+          ok: false,
+        };
+      }
+    }
+  };
+
+  const getVariantColors = async (query: VariantColorQuery) => {
+    const { from, limit, order, sort } = query;
+    try {
+      dispatch({ type: 'Admin - Variant Color isLoading' });
+
+      const { data } = await api.get<GetVariantColorsResp>(
+        `/variants/colors?sort=${sort}&order_by=${order}&limit=${limit}&from=${from}`,
+        { withCredentials: true }
+      );
+
+      dispatch({ type: 'Admin - Load Variant Color', payload: data });
+
+      dispatch({ type: 'Admin - Variant Color isLoading Finish' });
+    } catch (error) {
+      console.log({ error });
+      dispatch({ type: 'Admin - Variant Color isLoading Finish' });
+    }
+  };
+
+  const addVariantSize = async (
+    variant: VariantSize
+  ): Promise<AddVariantSizeResp> => {
+    try {
+      const { data } = await api.post<AddVariantSizeResp>(
+        '/variants',
+        variant,
+        { withCredentials: true }
+      );
+
+      return data;
+    } catch (error) {
+      console.log({ error });
+      if (axios.isAxiosError(error)) {
+        const err = error as AxiosError<AddVariantSizeResp>;
+
+        return err.response?.data!;
+      } else {
+        return {
+          msg: '',
+          newVariant: { id: 0, name: '', short: '' },
+          ok: false,
+        };
+      }
+    }
+  };
+
+  const getVariantSizes = async (query: VariantSizeQuery) => {
+    const { sort, order, limit, from } = query;
+    try {
+      dispatch({ type: 'Admin - Variant Sizes isLoading' });
+
+      const { data } = await api.get<GetVariantSizesResp>(
+        `/variants?sort=${sort}&order_by=${order}&from=${from}&limit=${limit}`,
+        { withCredentials: true }
+      );
+
+      dispatch({ type: 'Admin - Load Variant Sizes', payload: data });
+
+      dispatch({ type: 'Admin - Variant isLoading Finish' });
+    } catch (error) {
+      console.log({ error });
+      dispatch({ type: 'Admin - Variant isLoading Finish' });
+    }
+  };
 
   const getUsers = async (query: UserQuery) => {
     const { order, sort, limit, from, active } = query;
 
     try {
-      dispatch({ type: 'Admin - Create Category - isLoading' });
+      dispatch({ type: 'Admin - Users - isLoading' });
 
       const { data } = await api.get<UserList>(
         `/users?sort=${sort}&order_by=${order}&limit=${limit}&from=${from}&is_active=${active}`,
@@ -264,9 +422,9 @@ export const AdminProvider: FC<Props> = ({ children }) => {
 
       dispatch({ type: 'Admin - Load Users', payload: data });
 
-      dispatch({ type: 'Admin - Create Category - isLoading Finish' });
+      dispatch({ type: 'Admin - Users - isLoading Finish' });
     } catch (error) {
-      dispatch({ type: 'Admin - Create Category - isLoading Finish' });
+      dispatch({ type: 'Admin - Users - isLoading Finish' });
     }
   };
 
@@ -295,6 +453,40 @@ export const AdminProvider: FC<Props> = ({ children }) => {
     return data;
   };
 
+  const getAllAddresses = async (
+    query: AddressQuery
+  ): Promise<GetAllAdressesResp> => {
+    const { sort, order, limit, from } = query;
+
+    try {
+      dispatch({ type: 'Admin - Addresses - isLoading' });
+
+      const { data } = await api.get<GetAllAdressesResp>(
+        `/addresses?sort=${sort}&order_by=${order}&limit=${limit}&from=${from}`,
+        { withCredentials: true }
+      );
+
+      dispatch({ type: 'Admin - Get All Addresses', payload: data });
+
+      dispatch({ type: 'Admin - Addresses - isLoading Finish' });
+
+      return data;
+    } catch (error) {
+      console.log({ error });
+      if (axios.isAxiosError(error)) {
+        const err = error as AxiosError<GetAllAdressesResp>;
+
+        dispatch({ type: 'Admin - Addresses - isLoading Finish' });
+        return err.response?.data!;
+      } else {
+        dispatch({ type: 'Admin - Addresses - isLoading Finish' });
+        return { msg: '' };
+      }
+    }
+  };
+
+  const adminLogout = () => dispatch({ type: 'Admin - Log out' });
+
   return (
     <AdminContext.Provider
       value={{
@@ -308,6 +500,14 @@ export const AdminProvider: FC<Props> = ({ children }) => {
         countUsersRole,
         getUsers,
         updateUser,
+        addTags,
+        getAllTags,
+        getAllAddresses,
+        adminLogout,
+        addVariantColor,
+        addVariantSize,
+        getVariantSizes,
+        getVariantColors,
       }}
     >
       {children}

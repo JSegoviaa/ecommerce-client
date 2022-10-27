@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { Container, Fab } from '@mui/material';
@@ -20,8 +20,11 @@ import {
   SubcategoriesResp,
 } from '../../../interfaces';
 import { useCategories } from '../../../hooks';
+import { isAdminRole } from '../../../helpers';
+import { AuthContext } from '../../../contexts';
 
 const Subcategories: NextPage = () => {
+  const { user } = useContext(AuthContext);
   const [sort, setSort] = useState<Sort>('ASC');
   const [order, setOrder] = useState<OrderBy>('id');
   const [active, setActive] = useState<Active>('active');
@@ -84,13 +87,15 @@ const Subcategories: NextPage = () => {
               </>
             )}
 
-            <Fab
-              onClick={() => router.push('/admin/subcategorias/crear')}
-              color="primary"
-              aria-label="add"
-            >
-              <AddIcon />
-            </Fab>
+            {isAdminRole(user?.role_id) ? (
+              <Fab
+                onClick={() => router.push('/admin/subcategorias/crear')}
+                color="primary"
+                aria-label="add"
+              >
+                <AddIcon />
+              </Fab>
+            ) : null}
           </>
         )}
       </Container>

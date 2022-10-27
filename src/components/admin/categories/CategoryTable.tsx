@@ -1,4 +1,11 @@
-import { ChangeEvent, Dispatch, FC, MouseEvent, SetStateAction } from 'react';
+import {
+  ChangeEvent,
+  Dispatch,
+  FC,
+  MouseEvent,
+  SetStateAction,
+  useContext,
+} from 'react';
 import { useRouter } from 'next/router';
 import {
   Divider,
@@ -15,8 +22,9 @@ import {
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 
-import { formatedDate } from '../../../helpers';
+import { formatedDate, isValidRole } from '../../../helpers';
 import { CategoriesResp } from '../../../interfaces';
+import { AuthContext } from '../../../contexts';
 
 interface Props {
   categories: CategoriesResp | undefined;
@@ -30,6 +38,7 @@ interface Props {
 
 const CategoryTable: FC<Props> = (props) => {
   const { categories, limit, size, page, setLimit, setPage, setFrom } = props;
+  const { user } = useContext(AuthContext);
 
   const router = useRouter();
   const goToEdit = (id: number) => router.push(`/admin/categorias/${id}`);
@@ -59,7 +68,11 @@ const CategoryTable: FC<Props> = (props) => {
             <TableCell align="center">Título</TableCell>
             <TableCell align="center">Fecha de creación</TableCell>
             <TableCell align="center">Fecha de actualización</TableCell>
-            <TableCell align="center">Editar</TableCell>
+
+            {isValidRole(user?.role_id) ? (
+              <TableCell align="center">Editar</TableCell>
+            ) : null}
+
             <TableCell align="center">Estado</TableCell>
           </TableRow>
         </TableHead>
@@ -88,11 +101,15 @@ const CategoryTable: FC<Props> = (props) => {
               <TableCell align="center" component="th" scope="row">
                 {formatedDate(category.updated_at)}
               </TableCell>
-              <TableCell align="center" component="th" scope="row">
-                <IconButton onClick={() => goToEdit(category.id)}>
-                  <EditIcon />
-                </IconButton>
-              </TableCell>
+
+              {isValidRole(user?.role_id) ? (
+                <TableCell align="center" component="th" scope="row">
+                  <IconButton onClick={() => goToEdit(category.id)}>
+                    <EditIcon />
+                  </IconButton>
+                </TableCell>
+              ) : null}
+
               <TableCell align="center" component="th" scope="row">
                 <Typography>
                   {category.is_published ? 'Publicado' : 'Sin publicar'}

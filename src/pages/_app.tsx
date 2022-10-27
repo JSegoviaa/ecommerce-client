@@ -1,6 +1,7 @@
 import type { AppProps } from 'next/app';
 import { CssBaseline, ThemeProvider } from '@mui/material';
 import { SWRConfig } from 'swr';
+import NextNProgress from 'nextjs-progressbar';
 import moment from 'moment';
 import 'moment/locale/es';
 moment.locale('es');
@@ -25,6 +26,11 @@ function MyApp({ Component, pageProps }: AppProps) {
           <UiProvider>
             <ThemeProvider theme={lightTheme}>
               <CssBaseline />
+              <NextNProgress
+                height={6}
+                color="#000"
+                options={{ showSpinner: false }}
+              />
               <Component {...pageProps} />
             </ThemeProvider>
           </UiProvider>

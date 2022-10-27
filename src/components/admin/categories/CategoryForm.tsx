@@ -7,6 +7,7 @@ import { useForm } from 'react-hook-form';
 import { AdminContext, AuthContext } from '../../../contexts';
 import { Category, CreateCategory } from '../../../interfaces';
 import { Loading } from '../../ui';
+import { isAdminRole, isValidRole } from '../../../helpers';
 
 interface Props {
   category?: Category;
@@ -81,6 +82,12 @@ const CategoryForm: FC<Props> = ({ category }) => {
           is_active: isActive,
         });
 
+        if (!res.ok && res.msg) {
+          alert(res.msg);
+          setIsLoading(false);
+          return;
+        }
+
         setIsLoading(false);
         if (res.ok) router.push('/admin/categorias');
         return;
@@ -96,6 +103,12 @@ const CategoryForm: FC<Props> = ({ category }) => {
     };
 
     const res = await addCategory(newCategory);
+
+    if (!res.ok && res.msg) {
+      alert(res.msg);
+      setIsLoading(false);
+      return;
+    }
 
     if (!res.ok) {
       setIsLoading(false);
@@ -216,14 +229,21 @@ const CategoryForm: FC<Props> = ({ category }) => {
             {category?.id ? (
               <Button
                 type="submit"
-                disabled={!formState.isValid || !url}
+                disabled={
+                  !formState.isValid || !url || !isValidRole(user?.role_id)
+                }
                 variant="contained"
               >
                 Actualizar categoría
               </Button>
             ) : (
               <Button
-                disabled={!formState.isValid || !picture || !url}
+                disabled={
+                  !formState.isValid ||
+                  !picture ||
+                  !url ||
+                  !isAdminRole(user?.role_id)
+                }
                 type="submit"
                 variant="contained"
               >

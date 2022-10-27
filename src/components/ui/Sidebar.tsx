@@ -17,10 +17,12 @@ import VpnKeyOutlinedIcon from '@mui/icons-material/VpnKeyOutlined';
 import PersonAddAltOutlinedIcon from '@mui/icons-material/PersonAddAltOutlined';
 import SellOutlinedIcon from '@mui/icons-material/SellOutlined';
 import ExitToAppOutlinedIcon from '@mui/icons-material/ExitToAppOutlined';
-import { AuthContext, UiContext } from '../../contexts';
+import { AdminContext, AuthContext, UiContext } from '../../contexts';
+import { isValidRole } from '../../helpers';
 
 const Sidebar: FC = () => {
   const { isLoggedIn, user, logout } = useContext(AuthContext);
+  const { adminLogout } = useContext(AdminContext);
   const { isMenuOpen, toggleSideMenu } = useContext(UiContext);
   const router = useRouter();
 
@@ -32,6 +34,7 @@ const Sidebar: FC = () => {
   const onLogout = () => {
     logout();
     toggleSideMenu();
+    adminLogout();
   };
 
   return (
@@ -78,7 +81,7 @@ const Sidebar: FC = () => {
             </ListItemButton>
           ) : null}
 
-          {isLoggedIn && user?.role_id !== 4 && user?.role_id !== 5 ? (
+          {isLoggedIn && isValidRole(user?.role_id) ? (
             <ListItemButton onClick={() => navigateTo('/admin')}>
               <ListItem>
                 <ListItemIcon>

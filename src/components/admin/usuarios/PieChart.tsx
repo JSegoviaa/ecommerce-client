@@ -7,18 +7,18 @@ import { Loading } from '../../ui';
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 const PieChart: FC = () => {
-  const { countUsersRole, usersType, chartLoading } = useContext(AdminContext);
+  const { countUsersRole, users, chartLoading } = useContext(AdminContext);
 
   useEffect(() => {
     countUsersRole();
   }, []);
 
   const data = {
-    labels: usersType.map(({ role }) => role),
+    labels: users.usersType.map(({ role }) => role),
     datasets: [
       {
         label: 'Cantidad de usuarios por rol.',
-        data: usersType.map(({ count }) => count),
+        data: users.usersType.map(({ count }) => count),
         backgroundColor: [
           'rgba(255, 99, 132,0.6)',
           'rgba(54, 162, 235,0.6)',

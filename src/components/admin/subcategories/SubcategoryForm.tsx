@@ -24,6 +24,7 @@ import {
   Subcategory,
 } from '../../../interfaces';
 import { Loading } from '../../ui';
+import { isAdminRole, isValidRole } from '../../../helpers';
 
 interface Props {
   subcategory?: Subcategory;
@@ -121,6 +122,12 @@ const SubcategoryForm: FC<Props> = ({ subcategory }) => {
           category_id: Number(categoryId),
         });
 
+        if (!res.ok && res.msg) {
+          alert(res.msg);
+          setIsLoading(false);
+          return;
+        }
+
         setIsLoading(false);
         if (res.ok) router.push('/admin/subcategorias');
         return;
@@ -141,6 +148,12 @@ const SubcategoryForm: FC<Props> = ({ subcategory }) => {
     };
 
     const res = await addSubcategory(newSubcategory);
+
+    if (!res.ok && res.msg) {
+      alert(res.msg);
+      setIsLoading(false);
+      return;
+    }
 
     if (!res.ok) {
       setIsLoading(false);
@@ -288,14 +301,20 @@ const SubcategoryForm: FC<Props> = ({ subcategory }) => {
         {subcategory?.id ? (
           <Button
             type="submit"
-            disabled={!formState.isValid || !url}
+            disabled={!formState.isValid || !url || !isValidRole(user?.role_id)}
             variant="contained"
           >
             Actualizar subcategoría
           </Button>
         ) : (
           <Button
-            disabled={!formState.isValid || !picture || !url || !categoryId}
+            disabled={
+              !formState.isValid ||
+              !picture ||
+              !url ||
+              !categoryId ||
+              !isAdminRole(user?.role_id)
+            }
             type="submit"
             variant="contained"
           >

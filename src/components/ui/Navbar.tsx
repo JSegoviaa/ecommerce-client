@@ -3,6 +3,7 @@ import NextLink from 'next/link';
 import { AppBar, Box, Button, IconButton, Link, Toolbar } from '@mui/material';
 import MenuOutlinedIcon from '@mui/icons-material/MenuOutlined';
 import { AuthContext, UiContext } from '../../contexts';
+import { isValidRole } from '../../helpers';
 
 const Navbar: FC = () => {
   const { user, isLoggedIn } = useContext(AuthContext);
@@ -19,7 +20,7 @@ const Navbar: FC = () => {
             </Link>
           </NextLink>
 
-          {isLoggedIn && user?.role_id !== 4 && user?.role_id !== 5 ? (
+          {isLoggedIn && isValidRole(user?.role_id) ? (
             <NextLink href="/admin">
               <Link>
                 <Button color="secondary">Panel de administración</Button>

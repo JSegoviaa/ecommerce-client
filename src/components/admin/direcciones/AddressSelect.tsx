@@ -1,0 +1,55 @@
+import { FC, Dispatch, SetStateAction } from 'react';
+import {
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
+} from '@mui/material';
+import { AddressOrder, Sort } from '../../../interfaces';
+
+interface Props {
+  sort: Sort;
+  order: AddressOrder;
+  setSort: Dispatch<SetStateAction<Sort>>;
+  setOrder: Dispatch<SetStateAction<AddressOrder>>;
+}
+
+const AddressSelect: FC<Props> = (props) => {
+  const { sort, order, setOrder, setSort } = props;
+
+  const onChangeSort = (e: SelectChangeEvent) => {
+    setSort(e.target.value as Sort);
+  };
+
+  const onChangeOrder = (e: SelectChangeEvent) => {
+    setOrder(e.target.value as AddressOrder);
+  };
+
+  return (
+    <>
+      <FormControl sx={{ m: 1, minWidth: 120 }}>
+        <InputLabel>Ordenar de manera</InputLabel>
+        <Select value={sort} label="Ordenar de manera" onChange={onChangeSort}>
+          <MenuItem value="ASC">Ascendente</MenuItem>
+          <MenuItem value="DESC">Descendente</MenuItem>
+        </Select>
+      </FormControl>
+
+      <FormControl sx={{ m: 1, minWidth: 120 }}>
+        <InputLabel>Ordenar por</InputLabel>
+        <Select value={order} label="Ordenar por" onChange={onChangeOrder}>
+          <MenuItem value="id">Predeterminado</MenuItem>
+          <MenuItem value="city">Ciudad</MenuItem>
+          <MenuItem value="state">Estado</MenuItem>
+          <MenuItem value="municipality">Municipio</MenuItem>
+          <MenuItem value="postal_code">Código Postal</MenuItem>
+          <MenuItem value="address">Dirección</MenuItem>
+          <MenuItem value="user_id">Usuario</MenuItem>
+        </Select>
+      </FormControl>
+    </>
+  );
+};
+
+export default AddressSelect;

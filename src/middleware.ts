@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { jwtVerify } from 'jose';
 
+import { JWT } from './env';
+import { isAdminRole, isSuperAdminRole, isValidRole } from './helpers';
+
 export async function middleware(req: NextRequest) {
   const jwt = req.cookies.get('token');
 
@@ -16,10 +19,7 @@ export async function middleware(req: NextRequest) {
     return NextResponse.next();
   }
 
-  const { payload }: any = await jwtVerify(
-    jwt,
-    new TextEncoder().encode('JaBoNaRtE-TeSt-2022')
-  );
+  const { payload }: any = await jwtVerify(jwt, new TextEncoder().encode(JWT));
 
   if (req.nextUrl.pathname.startsWith('/auth')) {
     return NextResponse.redirect(new URL('/', req.url));
@@ -31,12 +31,44 @@ export async function middleware(req: NextRequest) {
     }
   }
 
+  if (req.nextUrl.pathname.startsWith('/admin/variantes')) {
+    if (!isSuperAdminRole(payload.user.role_id)) {
+      return NextResponse.redirect(new URL('/admin', req.url));
+    }
+  }
+
+  if (req.nextUrl.pathname.startsWith('/admin/codigos')) {
+    if (!isSuperAdminRole(payload.user.role_id)) {
+      return NextResponse.redirect(new URL('/admin', req.url));
+    }
+  }
+
+  if (req.nextUrl.pathname.startsWith('/admin/comentarios')) {
+    if (!isAdminRole(payload.user.role_id)) {
+      return NextResponse.redirect(new URL('/admin', req.url));
+    }
+  }
+
+  if (req.nextUrl.pathname.startsWith('/admin/direcciones')) {
+    if (!isAdminRole(payload.user.role_id)) {
+      return NextResponse.redirect(new URL('/admin', req.url));
+    }
+  }
+
+  if (req.nextUrl.pathname.startsWith('/admin/ratings')) {
+    if (!isAdminRole(payload.user.role_id)) {
+      return NextResponse.redirect(new URL('/admin', req.url));
+    }
+  }
+
+  if (req.nextUrl.pathname.startsWith('/admin/usuarios')) {
+    if (!isAdminRole(payload.user.role_id)) {
+      return NextResponse.redirect(new URL('/admin', req.url));
+    }
+  }
+
   if (req.nextUrl.pathname.startsWith('/admin')) {
-    if (
-      payload.user.role_id !== 1 &&
-      payload.user.role_id !== 2 &&
-      payload.user.role_id !== 3
-    ) {
+    if (!isValidRole(payload.user.role_id)) {
       return NextResponse.redirect(new URL('/', req.url));
     }
   }

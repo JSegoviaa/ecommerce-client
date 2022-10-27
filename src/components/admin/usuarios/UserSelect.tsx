@@ -20,7 +20,7 @@ interface Props {
 const UserSelect: FC<Props> = (props) => {
   const { sort, order, setOrder, setSort } = props;
 
-  const { isLoading } = useContext(AdminContext);
+  const { users } = useContext(AdminContext);
 
   const onChangeSort = (e: SelectChangeEvent) => {
     setSort(e.target.value as Sort);
@@ -31,7 +31,7 @@ const UserSelect: FC<Props> = (props) => {
 
   return (
     <>
-      {isLoading ? null : (
+      {users.isLoading ? null : (
         <>
           <FormControl sx={{ m: 1, minWidth: 120 }}>
             <InputLabel>Ordenar de manera</InputLabel>

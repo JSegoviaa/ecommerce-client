@@ -19,7 +19,6 @@ import {
   TablePagination,
   TableRow,
 } from '@mui/material';
-import axios from 'axios';
 import EditIcon from '@mui/icons-material/Edit';
 import { AdminContext } from '../../../contexts';
 import { formatedDate } from '../../../helpers';
@@ -33,7 +32,7 @@ interface Props {
 }
 
 const UserTable: FC<Props> = ({ order, sort, active }) => {
-  const { users, getUsers, totalUsers, isLoading } = useContext(AdminContext);
+  const { users, getUsers } = useContext(AdminContext);
   const [page, setPage] = useState(0);
   const [from, setFrom] = useState(0);
   const [limit, setLimit] = useState(10);
@@ -73,11 +72,11 @@ const UserTable: FC<Props> = ({ order, sort, active }) => {
 
   return (
     <>
-      {isLoading ? (
+      {users.isLoading ? (
         <Loading title="Cargando lista de usuarios" />
       ) : (
         <>
-          {users.length === 0 ? (
+          {users.userList.length === 0 ? (
             <Empty title="Aún no hay usuarios por aquí" />
           ) : (
             <>
@@ -96,7 +95,7 @@ const UserTable: FC<Props> = ({ order, sort, active }) => {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {users.map((user) => (
+                    {users.userList.map((user) => (
                       <TableRow
                         key={user.id}
                         sx={{
@@ -144,7 +143,7 @@ const UserTable: FC<Props> = ({ order, sort, active }) => {
                     }`
                   }
                   component="div"
-                  count={totalUsers}
+                  count={users.totalUsers}
                   page={page}
                   rowsPerPage={limit}
                   onPageChange={handleChangePage}
