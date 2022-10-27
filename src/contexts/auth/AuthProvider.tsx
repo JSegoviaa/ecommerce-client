@@ -44,9 +44,11 @@ export const AuthProvider: FC<Props> = ({ children }) => {
         withCredentials: true,
       });
 
-      Cookies.set('token', res.data.token!);
-
       dispatch({ type: 'Auth - Login', payload: res.data.user });
+
+      console.log(res.data);
+
+      Cookies.set('token', res.data.token!);
     } catch (error) {
       Cookies.remove('token');
     }
@@ -61,6 +63,8 @@ export const AuthProvider: FC<Props> = ({ children }) => {
       });
 
       dispatch({ type: 'Auth - Login', payload: res.data.user });
+
+      console.log(res.data);
 
       Cookies.set('token', res.data.token!);
 
