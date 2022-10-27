@@ -2,9 +2,9 @@ import type { AppProps } from 'next/app';
 import { CssBaseline, ThemeProvider } from '@mui/material';
 import { SWRConfig } from 'swr';
 import NextNProgress from 'nextjs-progressbar';
-import moment from 'moment';
-import 'moment/locale/es';
-moment.locale('es');
+// import moment from 'moment';
+// import 'moment/locale/es';
+// moment.locale('es');
 
 import { AdminProvider, AuthProvider, UiProvider } from '../contexts';
 import { lightTheme } from '../themes';
