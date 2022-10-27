@@ -1,5 +1,6 @@
 import { FC, useReducer } from 'react';
 import axios, { AxiosError } from 'axios';
+import Cookies from 'js-cookie';
 import { api } from '../../api';
 import {
   Address,
@@ -72,6 +73,8 @@ const Admin_INITIAL_STATE: AdminState = {
     colors: { isLoading: true, colorsList: [], total: 0 },
   },
 };
+
+const token = Cookies.get('token') || '';
 
 export const AdminProvider: FC<Props> = ({ children }) => {
   const [state, dispatch] = useReducer(adminReducer, Admin_INITIAL_STATE);
@@ -152,7 +155,7 @@ export const AdminProvider: FC<Props> = ({ children }) => {
       const { data } = await api.put<CategoryUpdatedResp>(
         `/categories/${category.id}`,
         category,
-        { withCredentials: true }
+        { withCredentials: true, headers: { 'x-token': token } }
       );
 
       return data;
